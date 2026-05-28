@@ -36,7 +36,7 @@ function HighlightTitle({
   )
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false)
 
   return (
