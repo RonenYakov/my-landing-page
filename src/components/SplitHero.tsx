@@ -165,8 +165,8 @@ export function SplitHero() {
         </span>
 
         {/* Left snippets */}
-        {LEFT_SNIPPETS.map((s, i) => (
-          <SnippetPill key={i} text={s.text} style={s.style} pos={s.pos} visible={snippetsVisible} />
+        {LEFT_SNIPPETS.map((s) => (
+          <SnippetPill key={s.text} text={s.text} style={s.style} pos={s.pos} visible={snippetsVisible} />
         ))}
       </div>
 
@@ -195,8 +195,8 @@ export function SplitHero() {
         </span>
 
         {/* Right snippets */}
-        {RIGHT_SNIPPETS.map((s, i) => (
-          <SnippetPill key={i} text={s.text} style={s.style} pos={s.pos} visible={snippetsVisible} />
+        {RIGHT_SNIPPETS.map((s) => (
+          <SnippetPill key={s.text} text={s.text} style={s.style} pos={s.pos} visible={snippetsVisible} />
         ))}
       </div>
 
