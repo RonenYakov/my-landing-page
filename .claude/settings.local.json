@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx skillfish *)",
+      "mcp__claude_ai_higgsfiled__show_plans_and_credits",
+      "mcp__claude_ai_higgsfiled__models_explore"
+    ]
+  }
+}
