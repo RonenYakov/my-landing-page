@@ -220,7 +220,6 @@ export function SplitHero() {
             height: 'clamp(150px, 16vw, 210px)',
             borderRadius: '5px',
             overflow: 'hidden',
-            position: 'relative',
           }}>
 
             {/* ── AI half ── */}
@@ -289,12 +288,10 @@ export function SplitHero() {
             </motion.div>
 
             {/* ── Internal screen divider ── */}
-            <motion.div style={{
-              position: 'absolute',
-              left: screenSplitLeftPct,
-              top: 0, bottom: 0,
+            <div style={{
               width: '1px',
               background: 'rgba(100,100,100,0.4)',
+              flexShrink: 0,
               zIndex: 2,
               pointerEvents: 'none',
             }} />
@@ -431,7 +428,7 @@ export function SplitHero() {
             fontFamily: "'Moderniz', sans-serif",
             fontSize: 'clamp(2.2rem, 4.5vw, 5rem)',
             letterSpacing: '-0.03em',
-            color: 'var(--text)',
+            color: '#111111',
             lineHeight: 1,
             display: 'block',
             marginBottom: '1rem',
@@ -444,7 +441,7 @@ export function SplitHero() {
           style={{
             fontFamily: "'DM Sans', sans-serif",
             fontSize: '0.95rem',
-            color: 'var(--muted)',
+            color: 'rgba(17,17,17,0.5)',
             lineHeight: 1.6,
             maxWidth: '22ch',
             margin: 0,
