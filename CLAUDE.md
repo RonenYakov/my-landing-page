@@ -3,22 +3,42 @@
 - Never echo, log, or commit API keys; if a key is needed, ask the user to paste it into a .env file
 
 ## Workflow
-- After rewriting a file, diff against the previous version to confirm no functions (e.g., dismiss_ticker) were accidentally removed
-- Commit and push after each completed feature unless told otherwise
+- After rewriting a file, diff against the previous version to confirm no functions were accidentally removed
+- Commit after each completed component unless told otherwise
 - Keep CLAUDE.md concise: remove completed steps once verified
 
 ## Environment
 - OS: Windows (use PowerShell syntax, not bash)
-- Always activate the venv before running Python/Streamlit commands
-- Avoid folder/path names containing '&' as they break npm script chaining on Windows
 - For interactive CLI installers (npx, gh auth login), instruct the user to run them directly in their terminal
 
 # Portfolio — Ronen Yakobov
 
 Global rules: `C:\Users\97254\.claude\CLAUDE.md`
-Design system: `C:\Users\97254\.claude\skills\my-design-style\SKILL.md`
-**Skills in use**: `my-design-style` → `frontend-design`
-**Stack**: Vite + React + TypeScript + Framer Motion + Lenis + GSAP + Tailwind
+Design spec: `docs/superpowers/specs/2026-05-27-portfolio-design.md`
+Implementation plan: `docs/superpowers/plans/2026-05-27-portfolio-build.md`
+**Skills in use**: `my-design-style` → `taste-skill` (design-taste-frontend) → `frontend-design`
+**Stack**: Vite + React + TypeScript + `motion/react` + Lenis + GSAP + Tailwind CSS v3 + lucide-react
+
+## Current Build Status
+
+**Task 1 COMPLETE** — scaffold done, all deps installed, git initialized.
+
+**Remaining tasks (execute in order from the plan):**
+- [ ] Task 2: Fonts + `src/styles/globals.css` + CSS variables + grain overlay
+- [ ] Task 3: NavBar component
+- [ ] Task 4: Projects data (`src/data/projects.ts`) + public folder structure
+- [ ] Task 5: ProjectCard component
+- [ ] Task 6: ProjectScroll (GSAP horizontal filmstrip)
+- [ ] Task 7: SplitHero (mouse divider + floating snippets)
+- [ ] Task 8: Hero placeholder image (nano-banana MCP)
+- [ ] Task 9: About + Skills + Contact + Footer + wire up App.tsx
+- [ ] Task 10: Lenis smooth scroll hook
+
+## Key asset paths (copy these before Task 2/9)
+- Fonts source: `C:\Users\97254\Desktop\fonts\english fonts\` → copy Moderniz.otf, Barett Street.ttf, Dimension.otf into `public\fonts\`
+- CV source: `C:\Users\97254\Desktop\Ronen-CV 2026.pdf` → copy to `public\ronen-cv.pdf`
+
+**Stack**: Vite + React + TypeScript + `motion/react` + Lenis + GSAP + Tailwind CSS v3 + lucide-react
 ---
 
 ## Design Principles

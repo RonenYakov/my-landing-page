@@ -1,3 +1,7 @@
+import { motion, useReducedMotion } from 'motion/react'
+
+const EASE_BRAND: [number, number, number, number] = [0.77, 0, 0.175, 1]
+
 // GitHub and LinkedIn official brand SVGs (lucide-react does not export these icons)
 function GitHubIcon({ size = 20 }: { size?: number }) {
   return (
@@ -35,9 +39,25 @@ const NAV_LINKS = [
 ]
 
 export function NavBar() {
+  const reduce = useReducedMotion()
+
+  const containerVariants = {
+    hidden: {},
+    show: { transition: { staggerChildren: reduce ? 0 : 0.07, delayChildren: reduce ? 0 : 0.1 } },
+  }
+  const linkVariants = reduce
+    ? { hidden: { opacity: 1 }, show: { opacity: 1 } }
+    : {
+        hidden: { opacity: 0, y: -8 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE_BRAND } },
+      }
+
   return (
-    <nav
+    <motion.nav
       className="fixed top-0 left-0 right-0 flex items-center justify-between px-8 h-14"
+      initial={reduce ? false : { opacity: 0, y: -16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: EASE_BRAND }}
       style={{
         background: 'var(--nav-bg)',
         color: 'var(--nav-text)',
@@ -58,12 +78,15 @@ export function NavBar() {
       </span>
 
       {/* Center: nav links — hidden on mobile */}
-      <ul
+      <motion.ul
         className="hidden md:flex items-center list-none m-0 p-0"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
         style={{ gap: '2rem' }}
       >
         {NAV_LINKS.map(({ label, href }) => (
-          <li key={label}>
+          <motion.li key={label} variants={linkVariants}>
             <a
               href={href}
               style={{
@@ -80,9 +103,9 @@ export function NavBar() {
             >
               {label}
             </a>
-          </li>
+          </motion.li>
         ))}
-      </ul>
+      </motion.ul>
 
       {/* Right: GitHub + LinkedIn icons */}
       <div className="flex items-center" style={{ gap: '1rem' }}>
@@ -105,6 +128,6 @@ export function NavBar() {
           <LinkedInIcon size={20} />
         </a>
       </div>
-    </nav>
+    </motion.nav>
   )
 }

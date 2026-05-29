@@ -14,8 +14,8 @@ export default function App() {
       <NavBar />
       <main style={{ paddingTop: '56px' }}>
         <SplitHero />
-        <ProjectScroll />
         <About />
+        <ProjectScroll />
         <Skills />
         <Contact />
       </main>

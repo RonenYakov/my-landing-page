@@ -3,7 +3,26 @@
     "allow": [
       "Bash(npx skillfish *)",
       "mcp__claude_ai_higgsfiled__show_plans_and_credits",
-      "mcp__claude_ai_higgsfiled__models_explore"
+      "mcp__claude_ai_higgsfiled__models_explore",
+      "PowerShell(Copy-Item *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(git *)",
+      "Bash(dir public *)",
+      "Bash(dir public\\\\hero)",
+      "Bash(dir \"public\\\\hero\")",
+      "Bash(git -C \"C:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\" add src/components/ProjectCard.tsx)",
+      "Bash(git -C \"C:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\" commit -m \"feat: project card component\")",
+      "Bash(git -C \"C:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\" add src/components/SplitHero.tsx src/App.tsx)",
+      "Bash(git -C \"C:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\" commit -m \"feat: split hero with mouse-tracked divider and floating snippets\")",
+      "mcp__claude_ai_higgsfiled__generate_image",
+      "mcp__claude_ai_higgsfiled__job_status",
+      "PowerShell(Invoke-WebRequest -Uri \"https://d8j0ntlcm91z4.cloudfront.net/user_3ELTEioIqVHxuGRviCr3O0XpJdT/hf_20260528_135111_a696b691-0c1c-472e-b465-bcf75496d7c8_min.webp\" -OutFile \"C:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\\\\public\\\\hero\\\\hero-placeholder.webp\"; Write-Host \"Downloaded OK\")",
+      "Bash(Test-Path *)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -L \"https://d8j0ntlcm91z4.cloudfront.net/user_3ELTEioIqVHxuGRviCr3O0XpJdT/hf_20260528_153832_dfbcfe2e-536c-4597-bb77-dc8d3dc3d682.png\" -o \"c:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\\\\public\\\\projects\\\\graph-server\\\\preview.png\")",
+      "Bash(curl -L \"https://d8j0ntlcm91z4.cloudfront.net/user_3ELTEioIqVHxuGRviCr3O0XpJdT/hf_20260528_153834_83e420ea-b78a-4a78-bba4-2ddb83c53101.png\" -o \"c:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\\\\public\\\\projects\\\\stock-trading-agent\\\\preview.png\")",
+      "Bash(curl -L \"https://d8j0ntlcm91z4.cloudfront.net/user_3ELTEioIqVHxuGRviCr3O0XpJdT/hf_20260528_153837_e507a113-f298-4a78-8226-556e2ec75822.png\" -o \"c:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\\\\public\\\\projects\\\\wedding-invitation\\\\preview.png\")",
+      "Bash(curl -L \"https://d8j0ntlcm91z4.cloudfront.net/user_3ELTEioIqVHxuGRviCr3O0XpJdT/hf_20260528_153839_6c30f733-394b-465f-a447-4cc0bc30ee55.png\" -o \"c:\\\\Users\\\\97254\\\\Desktop\\\\ronen-landing page\\\\public\\\\projects\\\\assembly-project\\\\preview.png\")"
     ]
   }
 }

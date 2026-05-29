@@ -1,0 +1,118 @@
+<h2>What fills the center of your SplitHero?</h2>
+<p class="subtitle">The divider + mouse spring are already built. This question is about the center visual — what the mouse is "revealing" as it moves left or right.</p>
+
+<div class="cards">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0d1117;height:200px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+      <!-- Left half -->
+      <div style="position:absolute;left:0;top:0;bottom:0;width:50%;background:#0d1117;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:12px;gap:6px;overflow:hidden;">
+        <div style="font-family:monospace;font-size:9px;color:#4ade80;opacity:0.8;">loss: 0.0423</div>
+        <div style="font-family:monospace;font-size:8px;color:#60a5fa;opacity:0.7;">model = SNN(64)</div>
+        <div style="font-family:monospace;font-size:8px;color:#f59e0b;opacity:0.6;">epoch 47/100 ████░░</div>
+        <div style="font-family:monospace;font-size:9px;color:#a78bfa;opacity:0.7;">accuracy: 94.2%</div>
+        <!-- grid lines -->
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(96,165,250,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,0.06) 1px,transparent 1px);background-size:20px 20px;"></div>
+      </div>
+      <!-- Right half -->
+      <div style="position:absolute;right:0;top:0;bottom:0;width:50%;background:#ffffff;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;padding:12px;gap:6px;overflow:hidden;">
+        <div style="font-family:monospace;font-size:8px;color:#1a2e4a;opacity:0.7;">const [data, setData]</div>
+        <div style="font-family:monospace;font-size:8px;color:#888;opacity:0.8;">border-radius: 12px</div>
+        <div style="background:#f4f4f4;border-radius:4px;padding:3px 8px;font-size:8px;color:#1a2e4a;font-family:monospace;">npm run build ✓</div>
+        <div style="font-family:monospace;font-size:8px;color:#888;">export default App</div>
+      </div>
+      <!-- Divider -->
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;background:#e8e8e8;"></div>
+      <!-- Labels -->
+      <div style="position:absolute;top:8px;left:8px;font-size:10px;color:#fff;font-family:sans-serif;font-weight:600;opacity:0.9;">deep learning</div>
+      <div style="position:absolute;top:8px;right:8px;font-size:10px;color:#111;font-family:sans-serif;font-weight:600;opacity:0.9;">&lt;full stack&gt;</div>
+    </div>
+    <div class="card-body">
+      <h3>A — Two Atmospheric Panels</h3>
+      <p>Dark terminal vibe on the left (AI), clean white code on the right (full-stack). No image needed — pure CSS atmosphere with floating code snippets already spec'd. The divider moves and clips between the two worlds. <strong>Builds on existing SplitHero code.</strong></p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f9f9f9;height:200px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+      <!-- Left half: AI screenshots with dark overlay -->
+      <div style="position:absolute;left:0;top:0;bottom:0;width:50%;background:#1a2e4a;display:flex;align-items:center;justify-content:center;gap:4px;flex-direction:column;padding:8px;overflow:hidden;">
+        <div style="background:#0f1f35;border-radius:4px;width:100%;height:35px;display:flex;align-items:center;padding:6px;gap:4px;">
+          <div style="width:6px;height:6px;background:#4ade80;border-radius:50%;"></div>
+          <div style="font-size:7px;color:#60a5fa;font-family:monospace;white-space:nowrap;">Classification Report</div>
+        </div>
+        <div style="background:#0f1f35;border-radius:4px;width:100%;height:35px;display:flex;align-items:center;padding:6px;gap:4px;">
+          <div style="width:6px;height:6px;background:#a78bfa;border-radius:50%;"></div>
+          <div style="font-size:7px;color:#f59e0b;font-family:monospace;">ResNet · FashionMNIST</div>
+        </div>
+        <div style="background:#0f1f35;border-radius:4px;width:100%;height:30px;display:flex;align-items:center;padding:6px;">
+          <div style="font-size:7px;color:#4ade80;font-family:monospace;">Seizure Detection SNN</div>
+        </div>
+        <div style="position:absolute;top:8px;left:8px;font-size:9px;color:#fff;font-family:sans-serif;font-weight:700;">AI &amp; Systems</div>
+      </div>
+      <!-- Right half: Fullstack screenshots, light -->
+      <div style="position:absolute;right:0;top:0;bottom:0;width:50%;background:#fff;display:flex;align-items:center;justify-content:center;gap:4px;flex-direction:column;padding:8px;overflow:hidden;">
+        <div style="background:#f4f4f4;border:1px solid #e8e8e8;border-radius:4px;width:100%;height:35px;display:flex;align-items:center;padding:6px;gap:4px;">
+          <div style="width:5px;height:5px;background:#1a2e4a;border-radius:50%;"></div>
+          <div style="font-size:7px;color:#1a2e4a;font-family:sans-serif;">Social Media Platform</div>
+        </div>
+        <div style="background:#f4f4f4;border:1px solid #e8e8e8;border-radius:4px;width:100%;height:35px;display:flex;align-items:center;padding:6px;gap:4px;">
+          <div style="width:5px;height:5px;background:#1a2e4a;border-radius:50%;"></div>
+          <div style="font-size:7px;color:#1a2e4a;font-family:sans-serif;">Wedding Site · countdown</div>
+        </div>
+        <div style="background:#f4f4f4;border:1px solid #e8e8e8;border-radius:4px;width:100%;height:30px;display:flex;align-items:center;padding:6px;">
+          <div style="font-size:7px;color:#1a2e4a;font-family:sans-serif;">Graph Server · Node.js</div>
+        </div>
+        <div style="position:absolute;top:8px;right:8px;font-size:9px;color:#111;font-family:sans-serif;font-weight:700;">Full Stack</div>
+      </div>
+      <!-- Divider -->
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;background:#888;"></div>
+    </div>
+    <div class="card-body">
+      <h3>B — Project Card Mosaic</h3>
+      <p>Your actual project names/thumbnails float in each panel, styled for their side. Left = dark navy AI card stack, right = clean white full-stack cards. The divider clips between the two stacks. Shows real work immediately — recruiters see projects before they scroll.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f9f9f9;height:200px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+      <!-- Center: floating laptop/device -->
+      <div style="position:relative;width:140px;height:100px;">
+        <!-- Screen bezel -->
+        <div style="position:absolute;inset:0;background:#222;border-radius:8px;padding:6px;">
+          <!-- Left half of screen (AI) -->
+          <div style="position:absolute;left:6px;top:6px;bottom:6px;width:calc(50% - 6px);background:#0d1117;border-radius:4px 0 0 4px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:6px;gap:3px;overflow:hidden;">
+            <div style="font-family:monospace;font-size:6px;color:#4ade80;">import torch</div>
+            <div style="font-family:monospace;font-size:6px;color:#60a5fa;">model = SNN()</div>
+            <div style="font-family:monospace;font-size:6px;color:#f59e0b;">loss: 0.042</div>
+          </div>
+          <!-- Right half of screen (FS) -->
+          <div style="position:absolute;right:6px;top:6px;bottom:6px;width:calc(50% - 6px);background:#ffffff;border-radius:0 4px 4px 0;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;padding:6px;gap:3px;overflow:hidden;">
+            <div style="font-family:monospace;font-size:6px;color:#1a2e4a;">const App</div>
+            <div style="font-family:monospace;font-size:6px;color:#888;">useState([])</div>
+            <div style="background:#f4f4f4;border-radius:2px;padding:1px 4px;font-size:6px;color:#1a2e4a;font-family:monospace;">build ✓</div>
+          </div>
+          <!-- Screen divider -->
+          <div style="position:absolute;left:50%;top:6px;bottom:6px;width:1px;background:#444;"></div>
+        </div>
+        <!-- Stand -->
+        <div style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:30px;height:6px;background:#333;border-radius:0 0 4px 4px;"></div>
+      </div>
+      <!-- Atmospheric bg split -->
+      <div style="position:absolute;left:0;top:0;bottom:0;width:50%;background:linear-gradient(135deg,#0d1117 0%,#1a2e4a 100%);opacity:0.15;"></div>
+      <div style="position:absolute;right:0;top:0;bottom:0;width:50%;background:#f9f9f9;"></div>
+      <div style="position:absolute;top:10px;left:10px;font-size:9px;color:#111;font-family:sans-serif;font-weight:700;">deep learning</div>
+      <div style="position:absolute;top:10px;right:10px;font-size:9px;color:#111;font-family:sans-serif;font-weight:700;">&lt;full stack&gt;</div>
+    </div>
+    <div class="card-body">
+      <h3>C — Central Object (monitor/device)</h3>
+      <p>A single floating device (laptop, monitor, or abstract code block) sits at the center. Its screen is already split — AI code on the left, React code on the right. Mouse movement reveals more of one atmospheric background. More editorial, less "two panels" feel.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:1.5rem;">The existing code already handles the mouse tracking and divider spring. These options differ only in <strong>what the divider is revealing</strong>.</p>

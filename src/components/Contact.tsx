@@ -1,24 +1,37 @@
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 
 const EASE_BRAND: [number,number,number,number] = [0.77, 0, 0.175, 1]
 
 export function Contact() {
+  const reduce = useReducedMotion()
+
+  const container = {
+    hidden: {},
+    show: { transition: { staggerChildren: reduce ? 0 : 0.1, delayChildren: reduce ? 0 : 0.05 } },
+  }
+  const item = reduce
+    ? { hidden: { opacity: 1 }, show: { opacity: 1 } }
+    : {
+        hidden: { opacity: 0, y: 24 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_BRAND } },
+      }
+
   return (
     <motion.section
       id="contact"
-      initial={{ opacity: 0, scale: 0.97 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: false, amount: 0.12 }}
-      transition={{ duration: 0.85, ease: EASE_BRAND }}
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
       style={{ padding: 'clamp(80px,12vw,160px) clamp(1.5rem,5vw,4rem)', textAlign: 'center' }}
     >
-      <p style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.72rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '2rem' }}>
+      <motion.p variants={item} style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.72rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '2rem' }}>
         (03) contact
-      </p>
-      <h2 style={{ fontFamily: "'Barett Street', serif", fontSize: 'clamp(2rem,4vw,3.5rem)', fontWeight: 400, fontStyle: 'italic', marginBottom: '3rem', letterSpacing: '-0.025em' }}>
+      </motion.p>
+      <motion.h2 variants={item} style={{ fontFamily: "'Barett Street', serif", fontSize: 'clamp(2rem,4vw,3.5rem)', fontWeight: 400, fontStyle: 'italic', marginBottom: '3rem', letterSpacing: '-0.025em' }}>
         Let's build something.
-      </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
+      </motion.h2>
+      <motion.div variants={item} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
         <a
           href="mailto:ronen0902@gmail.com"
           style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '1.1rem', color: 'var(--navy)', textDecoration: 'none', borderBottom: '1px solid var(--border)', paddingBottom: '2px' }}
@@ -34,7 +47,7 @@ export function Contact() {
         >
           Download CV
         </a>
-      </div>
+      </motion.div>
     </motion.section>
   )
 }

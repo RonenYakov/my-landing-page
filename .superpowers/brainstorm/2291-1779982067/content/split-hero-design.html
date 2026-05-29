@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SplitHero Full Design</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f0f0f;
+    color: #f0f0f0;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  h2 { font-size: 1.3rem; font-weight: 600; text-align: center; margin-bottom: 0.3rem; }
+  .subtitle { color: #666; font-size: 0.82rem; text-align: center; margin-bottom: 2rem; }
+  .section { margin-bottom: 2.5rem; }
+  .section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: #555; margin-bottom: 1rem; border-top: 1px solid #222; padding-top: 0.8rem; }
+
+  /* ── THE HERO MOCKUP ── */
+  .hero-frame {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    height: 420px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+  }
+
+  /* Background split — animates on hover */
+  .bg-left {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--split, 50%);
+    background: #0d1117;
+    transition: width 0.4s cubic-bezier(0.77,0,0.175,1);
+  }
+  .bg-right {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    width: calc(100% - var(--split, 50%));
+    background: #f9f9f9;
+    transition: width 0.4s cubic-bezier(0.77,0,0.175,1);
+  }
+  .hero-frame:hover .bg-left { width: calc(var(--hover-split, 50%)); }
+
+  /* Floating code snippets — left */
+  .snippet {
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    line-height: 1.5;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .snippet-pill {
+    background: rgba(22,27,34,0.92);
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 4px 8px;
+    color: #c9d1d9;
+  }
+  .snippet-plain { color: rgba(136,136,136,0.7); }
+  .g { color: #3fb950; }
+  .b { color: #58a6ff; }
+  .y { color: #e3b341; }
+  .p { color: #bc8cff; }
+
+  /* Labels */
+  .label-left {
+    position: absolute; left: 4%; top: 50%; transform: translateY(-50%);
+    z-index: 5;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .label-right {
+    position: absolute; right: 4%; top: 50%; transform: translateY(-50%);
+    z-index: 5;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #111;
+    line-height: 1;
+    text-align: right;
+  }
+  .label-sub {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0;
+    margin-top: 0.4rem;
+    max-width: 18ch;
+    line-height: 1.4;
+  }
+  .label-sub-dark {
+    color: rgba(0,0,0,0.45);
+    text-align: right;
+  }
+
+  /* Divider */
+  .divider {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(150,150,150,0.3);
+    z-index: 6;
+    transition: left 0.4s cubic-bezier(0.77,0,0.175,1);
+  }
+
+  /* Laptop */
+  .laptop-wrap {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 7;
+    width: 320px;
+  }
+  .laptop-screen {
+    background: #1c1c1e;
+    border-radius: 10px 10px 3px 3px;
+    padding: 8px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .laptop-notch {
+    width: 10px; height: 10px;
+    background: #2a2a2e;
+    border-radius: 50%;
+    margin: 0 auto 6px;
+  }
+  .laptop-display {
+    display: flex;
+    height: 175px;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* AI half of laptop screen */
+  .screen-ai {
+    width: 50%;
+    background: #0d1117;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: width 0.4s cubic-bezier(0.77,0,0.175,1);
+  }
+  .screen-fs {
+    flex: 1;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.4s cubic-bezier(0.77,0,0.175,1);
+  }
+
+  /* Confusion matrix mini */
+  .conf-matrix {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5px;
+    flex: 1;
+  }
+  .conf-matrix div { border-radius: 1px; }
+
+  /* Classification report mini */
+  .cls-report {
+    background: #161b22;
+    border-radius: 3px;
+    padding: 4px 5px;
+    font-size: 5.5px;
+    font-family: monospace;
+  }
+
+  /* FS content */
+  .fs-nav {
+    background: #111;
+    padding: 3px 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .fs-nav span { font-size: 5px; color: #fff; font-weight: 700; }
+  .fs-nav-links { display: flex; gap: 5px; }
+  .fs-nav-links span { font-size: 4px; color: #888; }
+
+  .fs-hero {
+    flex: 1;
+    background: linear-gradient(135deg, #f5f0eb 0%, #ece6df 100%);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+  .fs-tag { font-size: 4.5px; color: #c07a50; letter-spacing: 0.08em; text-transform: uppercase; }
+  .fs-title { font-size: 14px; font-weight: 800; color: #1a1a1a; line-height: 1.1; }
+  .fs-sub { font-size: 5px; color: #888; }
+  .fs-btn { background: #c07a50; color: #fff; border-radius: 10px; padding: 2px 6px; font-size: 4px; width: fit-content; margin-top: 3px; }
+
+  /* Screen divider line */
+  .screen-divider {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(100,100,100,0.5);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Keyboard */
+  .laptop-keyboard {
+    background: #222;
+    height: 12px;
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .laptop-trackpad {
+    width: 50px; height: 7px;
+    background: #1a1a1a;
+    border-radius: 3px;
+  }
+
+  /* Scroll cue */
+  .scroll-cue {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 8;
+    font-size: 1rem;
+    color: rgba(100,100,100,0.6);
+  }
+
+  /* Interactive control */
+  .controls {
+    text-align: center;
+    margin-top: 1rem;
+    color: #555;
+    font-size: 0.75rem;
+  }
+  .slider-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  .slider-wrap label { font-size: 0.7rem; color: #555; }
+  #split-slider { width: 220px; accent-color: #6366f1; }
+
+  /* Annotation boxes */
+  .annotations {
+    max-width: 900px;
+    margin: 1.5rem auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .ann {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
+  .ann h4 { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: #ccc; }
+  .ann ul { list-style: none; padding: 0; }
+  .ann ul li { font-size: 0.75rem; color: #777; padding: 2px 0; padding-left: 1rem; position: relative; }
+  .ann ul li::before { content: "→"; position: absolute; left: 0; color: #6366f1; }
+</style>
+</head>
+<body>
+
+<h2>SplitHero — Full Design</h2>
+<p class="subtitle">Drag the slider to simulate the mouse moving left ↔ right</p>
+
+<div class="section">
+  <div class="hero-frame" id="heroFrame">
+
+    <!-- Backgrounds -->
+    <div class="bg-left" id="bgLeft"></div>
+    <div class="bg-right" id="bgRight"></div>
+
+    <!-- Floating AI snippets (left side) -->
+    <div class="snippet snippet-pill" style="top:12%;left:3%;"><span class="g">loss:</span> 0.0423</div>
+    <div class="snippet snippet-pill" style="top:35%;left:2%;font-size:0.6rem;"><span class="b">model</span> = <span class="y">SNN</span>(64)</div>
+    <div class="snippet snippet-plain" style="top:55%;left:4%;"><span class="g">accuracy: 94.2%</span></div>
+    <div class="snippet snippet-plain" style="top:72%;left:3%;font-size:0.58rem;color:rgba(136,136,136,0.5);">PyTorch · NumPy · sklearn</div>
+    <div class="snippet snippet-pill" style="bottom:14%;left:5%;font-size:0.58rem;"><span class="p">epoch</span> 47/100 <span class="y">████░░</span></div>
+
+    <!-- Labels -->
+    <div class="label-left">
+      deep learning
+      <span class="label-sub">AI systems, seizure detection,<br>text classification, ResNet</span>
+    </div>
+    <div class="label-right">
+      &lt;full stack&gt;
+      <span class="label-sub label-sub-dark">React, Node, social platforms,<br>production web apps</span>
+    </div>
+
+    <!-- Floating FS snippets (right side) -->
+    <div class="snippet" style="top:14%;right:3%;font-family:monospace;font-size:0.6rem;color:rgba(26,46,74,0.6);">const [data, setData]</div>
+    <div class="snippet snippet-pill" style="top:38%;right:2%;background:rgba(244,244,244,0.95);border:1px solid #e8e8e8;color:#1a2e4a;font-size:0.6rem;">npm run build <span style="color:#27ae60;">✓</span></div>
+    <div class="snippet" style="top:58%;right:4%;font-family:monospace;font-size:0.58rem;color:rgba(136,136,136,0.55);">border-radius: 12px</div>
+    <div class="snippet" style="bottom:14%;right:3%;font-size:0.58rem;color:rgba(136,136,136,0.45);">React · TypeScript · SQL</div>
+
+    <!-- Divider -->
+    <div class="divider" id="divider"></div>
+
+    <!-- Laptop -->
+    <div class="laptop-wrap">
+      <div class="laptop-screen">
+        <div class="laptop-notch"></div>
+        <div class="laptop-display">
+          <!-- AI half -->
+          <div class="screen-ai" id="screenAi">
+            <div style="font-size:5.5px;color:#3fb950;font-family:monospace;padding:2px 0;">● Confusion Matrix — FashionMNIST</div>
+            <div class="conf-matrix" style="flex:1.2;">
+              <!-- Row 1 -->
+              <div style="background:#1e4a8a;"></div><div style="background:#0d1f3c;"></div><div style="background:#1a3a70;"></div><div style="background:#0a1830;"></div><div style="background:#2060a0;"></div>
+              <!-- Row 2 -->
+              <div style="background:#0a1830;"></div><div style="background:#1e4a8a;"></div><div style="background:#0a1830;"></div><div style="background:#2868b0;"></div><div style="background:#0a1830;"></div>
+              <!-- Row 3 -->
+              <div style="background:#2060a0;"></div><div style="background:#0a1830;"></div><div style="background:#1e4a8a;"></div><div style="background:#0a1830;"></div><div style="background:#0a1830;"></div>
+              <!-- Row 4 -->
+              <div style="background:#0a1830;"></div><div style="background:#2060a0;"></div><div style="background:#0a1830;"></div><div style="background:#1e4a8a;"></div><div style="background:#2060a0;"></div>
+              <!-- Row 5 -->
+              <div style="background:#0a1830;"></div><div style="background:#0a1830;"></div><div style="background:#2868b0;"></div><div style="background:#0a1830;"></div><div style="background:#1e4a8a;"></div>
+            </div>
+            <div class="cls-report">
+              <div style="color:#888;margin-bottom:2px;">Classification Report</div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:#58a6ff;">precision</span><span style="color:#3fb950;">0.88</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:#58a6ff;">recall</span><span style="color:#3fb950;">0.87</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:#e3b341;">f1-score</span><span style="color:#3fb950;">0.87</span></div>
+            </div>
+          </div>
+
+          <!-- Screen divider -->
+          <div class="screen-divider" id="screenDivider"></div>
+
+          <!-- FS half -->
+          <div class="screen-fs">
+            <div class="fs-nav">
+              <span>RY</span>
+              <div class="fs-nav-links">
+                <span>about</span><span>projects</span><span>skills</span>
+              </div>
+            </div>
+            <div class="fs-hero">
+              <div class="fs-tag">EVENTS · SOCIAL · MEDIA</div>
+              <div class="fs-title">Creating<br>presence.</div>
+              <div class="fs-sub">Social media management + cinematic Reels</div>
+              <div class="fs-btn">Let's create buzz →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="laptop-keyboard">
+        <div class="laptop-trackpad"></div>
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="scroll-cue">↓</div>
+
+  </div>
+
+  <!-- Slider -->
+  <div class="controls">
+    <div class="slider-wrap">
+      <label>AI side ←</label>
+      <input type="range" id="split-slider" min="20" max="80" value="50">
+      <label>→ Full stack</label>
+    </div>
+    <p style="margin-top:0.4rem;font-size:0.7rem;color:#444;">This simulates mouse movement. Middle = 50/50 split.</p>
+  </div>
+</div>
+
+<!-- Annotations -->
+<div class="section">
+  <div class="section-title">How it works</div>
+  <div class="annotations">
+    <div class="ann">
+      <h4>Background split (behind laptop)</h4>
+      <ul>
+        <li>Left half: dark #0d1117 — AI atmosphere</li>
+        <li>Right half: white #f9f9f9 — full-stack atmosphere</li>
+        <li>Divider tracks mouse X with spring (stiffness 60, damping 18)</li>
+        <li>Clamped 20–80% so extremes don't fully hide either side</li>
+        <li>Floating code snippets on each side fade in/out</li>
+      </ul>
+    </div>
+    <div class="ann">
+      <h4>Laptop screen (center object)</h4>
+      <ul>
+        <li>Left half: confusion matrix + classification report (real screenshots)</li>
+        <li>Right half: social platform UI (real screenshot)</li>
+        <li>Internal screen divider also moves with mouse (same spring value)</li>
+        <li>Screenshots placed in /public/hero/ — no external deps</li>
+        <li>Laptop frame: 320–380px wide, centered, drops shadow on bg</li>
+      </ul>
+    </div>
+    <div class="ann">
+      <h4>Screenshots to copy</h4>
+      <ul>
+        <li>AI left: confusion matrix PNG → hero-ai-1.png</li>
+        <li>AI left: classification report PNG → hero-ai-2.png</li>
+        <li>FS right: social platform UI PNG → hero-fs-1.png</li>
+        <li>FS right: wedding countdown PNG → hero-fs-2.png</li>
+        <li>Rotated between on a 4s interval (subtle CSS keyframe)</li>
+      </ul>
+    </div>
+    <div class="ann">
+      <h4>What stays the same</h4>
+      <ul>
+        <li>Labels: "deep learning" left, "&lt;full stack&gt;" right</li>
+        <li>Mouse tracking + useSpring — already built</li>
+        <li>Scroll cue ↓ — already built</li>
+        <li>Mobile: laptop hidden, just labels + split bg</li>
+        <li>All existing CSS vars + typography</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const slider = document.getElementById('split-slider');
+const bgLeft = document.getElementById('bgLeft');
+const bgRight = document.getElementById('bgRight');
+const divider = document.getElementById('divider');
+const screenAi = document.getElementById('screenAi');
+const screenDivider = document.getElementById('screenDivider');
+
+function updateSplit(val) {
+  const pct = val + '%';
+  const invPct = (100 - val) + '%';
+  bgLeft.style.width = pct;
+  bgRight.style.width = invPct;
+  divider.style.left = pct;
+  // Laptop screen split: center is always 50% of laptop, but ratio shifts
+  // Map 20–80 → screen AI width 30%–70%
+  const screenPct = ((val - 20) / 60) * 40 + 30;
+  screenAi.style.width = screenPct + '%';
+  screenDivider.style.left = screenPct + '%';
+}
+
+slider.addEventListener('input', () => updateSplit(parseInt(slider.value)));
+
+// Post selection event
+function postEvent(choice) {
+  fetch('/event', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({type:'click', choice, timestamp: Date.now()})
+  }).catch(() => {});
+}
+</script>
+
+</body>
+</html>
