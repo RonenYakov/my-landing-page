@@ -4,6 +4,7 @@ export interface Project {
   highlightWord: string
   category: 'ai' | 'fullstack' | 'systems'
   githubUrl: string
+  liveUrl?: string
   images?: string[]
   accent: string   // background color for the card image area
 }
@@ -27,7 +28,7 @@ export const projects: Project[] = [
     highlightWord: 'Human',
     category: 'ai',
     accent: '#ede8f7',   // soft purple / NLP
-    githubUrl: 'https://github.com/RonenYakov/text-classification',
+    githubUrl: 'https://github.com/RonenYakov/human-vs-machine-text-classification-',
     images: [
       '/projects/text-classification/{D4E53499-DB45-41B5-A0A5-A2387C5B375B}.png',
       '/projects/text-classification/{BCC628CA-8A1F-4386-B16E-40CD11B1DD08}.png',
@@ -36,11 +37,12 @@ export const projects: Project[] = [
   },
   {
     id: 'social-platform',
-    title: 'Social Media Management Platform',
+    title: 'Social Media Manager Landing Page',
     highlightWord: 'Media',
     category: 'fullstack',
     accent: '#fdf0e0',   // warm cream / social
     githubUrl: 'https://github.com/RonenYakov/social-platform',
+    liveUrl: 'https://shani-page.vercel.app/',
     images: [
       '/projects/social-platform/{13E00A28-E5A6-4CB1-B8E3-95371255CCFD}.png',
       '/projects/social-platform/{77D12F66-F61F-4C65-B57B-06CDE7B03887}.png',
@@ -53,7 +55,7 @@ export const projects: Project[] = [
     highlightWord: 'Graph',
     category: 'systems',
     accent: '#e2f0e8',
-    githubUrl: 'https://github.com/RonenYakov/graph-server',
+    githubUrl: 'https://github.com/RonenYakov/MuMultiThreaded-Graph-Server-',
     images: ['/projects/graph-server/preview.png'],
   },
   {
@@ -62,7 +64,7 @@ export const projects: Project[] = [
     highlightWord: 'Fashion',
     category: 'ai',
     accent: '#f7e8f0',   // dusty rose / fashion ML
-    githubUrl: 'https://github.com/RonenYakov/resnet-fashion',
+    githubUrl: 'https://github.com/RonenYakov/DeepLearning-ResNet-',
     images: [
       '/projects/resnet-fashion/{7AE1AF1C-8B69-4184-A3EB-CB8C647FCA49}.png',
       '/projects/resnet-fashion/{516C842E-FFD4-42A4-BCF8-FFF816F21914}.png',
@@ -85,6 +87,7 @@ export const projects: Project[] = [
     category: 'fullstack',
     accent: '#f5f0eb',
     githubUrl: 'https://github.com/RonenYakov/wedding-invitation',
+    liveUrl: 'https://wedding-invitation-t-b.vercel.app/',
     images: [
       '/projects/wedding-invitation/{BC787B06-F313-42C4-8F63-7464684BFFAC}.png',
       '/projects/wedding-invitation/{33EA357A-F83A-4072-A5B5-D1C3A9F0DE43}.png',

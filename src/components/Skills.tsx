@@ -1,41 +1,37 @@
 import { motion } from 'motion/react'
 
 const EASE_BRAND: [number, number, number, number] = [0.77, 0, 0.175, 1]
-const ACCENT = '#c0673a'
 
-type Axis = {
+const ACCENT = '#1a2e4a'
+
+type Category = {
   label: string
-  score: number // 0..100
+  strength: number // 0..1 — radar reach, no number is shown
   tech: string[]
 }
 
-// Ordered clockwise from top. Ronen is strongest in AI/ML and Frontend.
-const axes: Axis[] = [
-  { label: 'AI / ML', score: 94, tech: ['Neural Networks', 'CNNs', 'PyTorch', 'scikit-learn', 'Transfer Learning', 'Model Evaluation'] },
-  { label: 'Frontend', score: 90, tech: ['React', 'TypeScript', 'Tailwind', 'HTML', 'CSS'] },
-  { label: 'Languages', score: 85, tech: ['Python', 'TypeScript', 'JavaScript', 'C'] },
-  { label: 'Backend', score: 76, tech: ['Node.js', 'Express', 'SQL', 'PostgreSQL', 'REST APIs'] },
-  { label: 'Data', score: 80, tech: ['Data Preprocessing', 'Model Evaluation', 'SQL'] },
-  { label: 'Tooling / DevOps', score: 72, tech: ['Git', 'Docker', 'Vite', 'Linux'] },
+const categories: Category[] = [
+  { label: 'AI / ML', strength: 0.94, tech: ['Neural Networks', 'CNNs', 'PyTorch', 'scikit-learn', 'Transfer Learning', 'Model Evaluation'] },
+  { label: 'Frontend', strength: 0.90, tech: ['React', 'TypeScript', 'Tailwind', 'HTML', 'CSS'] },
+  { label: 'Languages', strength: 0.85, tech: ['Python', 'TypeScript', 'JavaScript', 'C'] },
+  { label: 'Backend', strength: 0.76, tech: ['Node.js', 'Express', 'SQL', 'PostgreSQL', 'REST APIs'] },
+  { label: 'Data', strength: 0.80, tech: ['Data Preprocessing', 'Model Evaluation', 'SQL'] },
+  { label: 'Tooling / DevOps', strength: 0.72, tech: ['Git', 'Docker', 'Vite'] },
 ]
 
-const overall = Math.round(axes.reduce((s, a) => s + a.score, 0) / axes.length)
+// ---- Radar wheel (no score) ----
+const RADAR_SIZE = 260
+const RADAR_R = 92
+const RADAR_C = RADAR_SIZE / 2
 
-// ---- radar geometry ----
-const SIZE = 360
-const CENTER = SIZE / 2
-const R = 120 // max radius for 100% (slightly tighter so labels fit the narrow screen)
-const N = axes.length
-
-// vertex at axis index i for a given fraction (0..1), top-anchored
 function vertex(i: number, frac: number): [number, number] {
-  const angle = (Math.PI * 2 * i) / N - Math.PI / 2
-  return [CENTER + Math.cos(angle) * R * frac, CENTER + Math.sin(angle) * R * frac]
+  const angle = (Math.PI * 2 * i) / categories.length - Math.PI / 2
+  return [RADAR_C + Math.cos(angle) * RADAR_R * frac, RADAR_C + Math.sin(angle) * RADAR_R * frac]
 }
 
 function ringPath(frac: number): string {
   return (
-    axes
+    categories
       .map((_, i) => {
         const [x, y] = vertex(i, frac)
         return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`
@@ -44,37 +40,30 @@ function ringPath(frac: number): string {
   )
 }
 
-const dataPolygon = axes
-  .map((a, i) => {
-    const [x, y] = vertex(i, a.score / 100)
-    return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`
-  })
-  .join(' ') + ' Z'
-
-const rings = [0.25, 0.5, 0.75, 1]
+const dataPolygon =
+  categories
+    .map((c, i) => {
+      const [x, y] = vertex(i, c.strength)
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`
+    })
+    .join(' ') + ' Z'
 
 function Radar() {
+  const rings = [0.25, 0.5, 0.75, 1]
   return (
     <svg
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`}
       role="img"
-      aria-label={`Radar chart of skill scores, overall ${overall} out of 100`}
+      aria-label="Radar chart showing relative strengths across skill categories"
       style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}
     >
-      {/* concentric hexagon grid rings */}
       {rings.map((f) => (
         <path key={f} d={ringPath(f)} fill="none" stroke="var(--border)" strokeWidth={1} />
       ))}
-
-      {/* spokes */}
-      {axes.map((_, i) => {
+      {categories.map((_, i) => {
         const [x, y] = vertex(i, 1)
-        return (
-          <line key={i} x1={CENTER} y1={CENTER} x2={x.toFixed(2)} y2={y.toFixed(2)} stroke="var(--border)" strokeWidth={1} />
-        )
+        return <line key={i} x1={RADAR_C} y1={RADAR_C} x2={x.toFixed(2)} y2={y.toFixed(2)} stroke="var(--border)" strokeWidth={1} />
       })}
-
-      {/* data polygon */}
       <motion.path
         d={dataPolygon}
         fill={ACCENT}
@@ -86,19 +75,15 @@ function Radar() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: false, amount: 0.4 }}
         transition={{ duration: 0.9, ease: EASE_BRAND }}
-        style={{ transformOrigin: `${CENTER}px ${CENTER}px` }}
+        style={{ transformOrigin: `${RADAR_C}px ${RADAR_C}px` }}
       />
-
-      {/* vertex dots */}
-      {axes.map((a, i) => {
-        const [x, y] = vertex(i, a.score / 100)
-        return <circle key={i} cx={x.toFixed(2)} cy={y.toFixed(2)} r={3.5} fill={ACCENT} />
+      {categories.map((c, i) => {
+        const [x, y] = vertex(i, c.strength)
+        return <circle key={i} cx={x.toFixed(2)} cy={y.toFixed(2)} r={3} fill={ACCENT} />
       })}
-
-      {/* axis labels */}
-      {axes.map((a, i) => {
-        const [x, y] = vertex(i, 1.2)
-        const anchor = x < CENTER - 4 ? 'end' : x > CENTER + 4 ? 'start' : 'middle'
+      {categories.map((c, i) => {
+        const [x, y] = vertex(i, 1.22)
+        const anchor = x < RADAR_C - 4 ? 'end' : x > RADAR_C + 4 ? 'start' : 'middle'
         return (
           <text
             key={i}
@@ -106,9 +91,9 @@ function Radar() {
             y={y.toFixed(2)}
             textAnchor={anchor}
             dominantBaseline="middle"
-            style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, letterSpacing: '0.04em', fill: 'var(--text)' }}
+            style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 9, letterSpacing: '0.04em', fill: 'var(--text)' }}
           >
-            {a.label}
+            {c.label}
           </text>
         )
       })}
@@ -116,106 +101,54 @@ function Radar() {
   )
 }
 
-function ScoreBadge() {
+function CategoryBlock({ cat }: { cat: Category }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        width: 84,
-        height: 84,
-        borderRadius: '50%',
-        border: `2px solid ${ACCENT}`,
-        flexShrink: 0,
-      }}
-      aria-label={`Overall score ${overall} out of 100, Excellent`}
-    >
-      <span style={{ fontFamily: 'Moderniz, sans-serif', fontSize: '1.7rem', lineHeight: 1, color: 'var(--navy)' }}>
-        {overall}
-      </span>
-      <span
+    <div style={{ marginBottom: '1.5rem' }}>
+      <h3
         style={{
-          fontFamily: 'IBM Plex Mono, monospace',
-          fontSize: '0.55rem',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          color: ACCENT,
-          marginTop: '0.3rem',
+          fontFamily: 'DM Sans, sans-serif',
+          fontWeight: 500,
+          fontSize: '0.95rem',
+          color: 'var(--navy)',
+          margin: '0 0 0.65rem',
+          letterSpacing: '-0.005em',
         }}
       >
-        Excellent
-      </span>
+        {cat.label}
+      </h3>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+        {cat.tech.map((t) => (
+          <span
+            key={t}
+            style={{
+              fontFamily: 'IBM Plex Mono, monospace',
+              fontSize: '0.62rem',
+              color: 'var(--text)',
+              border: '1px solid var(--border)',
+              borderRadius: 100,
+              padding: '0.22rem 0.6rem',
+              letterSpacing: '0.01em',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {t}
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
 
-function Breakdown() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-      {axes.map((a, i) => (
-        <motion.div
-          key={a.label}
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.4 }}
-          transition={{ duration: 0.5, ease: EASE_BRAND, delay: i * 0.05 }}
-        >
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
-            <span style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 500, fontSize: '0.9rem', color: 'var(--text)' }}>
-              {a.label}
-            </span>
-            <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.78rem', color: 'var(--muted)' }}>
-              {a.score}%
-            </span>
-          </div>
-
-          {/* score bar */}
-          <div style={{ height: 4, background: 'var(--border)', borderRadius: 100, overflow: 'hidden', marginBottom: '0.6rem' }}>
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: a.score / 100 }}
-              viewport={{ once: false, amount: 0.4 }}
-              transition={{ duration: 0.8, ease: EASE_BRAND, delay: i * 0.05 + 0.1 }}
-              style={{ height: '100%', background: ACCENT, transformOrigin: 'left', borderRadius: 100 }}
-            />
-          </div>
-
-          {/* tech tags */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-            {a.tech.map((t) => (
-              <span
-                key={t}
-                style={{
-                  fontFamily: 'IBM Plex Mono, monospace',
-                  fontSize: '0.62rem',
-                  letterSpacing: '0.02em',
-                  color: 'var(--muted)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 100,
-                  padding: '0.18rem 0.55rem',
-                }}
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  )
-}
-
-// ---- iPhone-style device frame ----
 function Phone({
   children,
   delay = 0,
   offsetY = 0,
+  eyebrow,
 }: {
   children: React.ReactNode
   delay?: number
   offsetY?: number
+  eyebrow: string
 }) {
   return (
     <motion.div
@@ -231,11 +164,10 @@ function Phone({
         background: '#1c1c1e',
         borderRadius: 44,
         padding: 9,
-        boxShadow: '0 30px 60px -20px rgba(0,0,0,0.45), 0 8px 20px -8px rgba(0,0,0,0.3)',
+        boxShadow: '0 30px 60px -20px hsl(217 50% 12% / 0.45), 0 8px 20px -8px hsl(217 50% 12% / 0.3)',
         marginTop: offsetY,
       }}
     >
-      {/* screen */}
       <div
         style={{
           position: 'relative',
@@ -259,7 +191,6 @@ function Phone({
             zIndex: 2,
           }}
         />
-        {/* scrollable screen content */}
         <div
           style={{
             position: 'absolute',
@@ -268,7 +199,20 @@ function Phone({
             padding: '52px 20px 28px',
           }}
         >
-          {children}
+          <p
+            style={{
+              fontFamily: 'IBM Plex Mono, monospace',
+              fontSize: '0.6rem',
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'var(--muted)',
+              margin: '0 0 1.25rem',
+              textAlign: 'left',
+            }}
+          >
+            {eyebrow}
+          </p>
+          <div style={{ textAlign: 'left' }}>{children}</div>
         </div>
       </div>
     </motion.div>
@@ -276,6 +220,7 @@ function Phone({
 }
 
 export function Skills() {
+
   return (
     <motion.section
       id="skills"
@@ -306,14 +251,17 @@ export function Skills() {
 
       <h2
         style={{
-          fontFamily: 'Moderniz, sans-serif',
-          fontSize: 'clamp(1.8rem,4vw,2.6rem)',
-          lineHeight: 1.05,
+          fontFamily: "'Moderniz', sans-serif",
+          fontSize: 'clamp(2rem,4vw,3.5rem)',
+          fontWeight: 400,
+          fontStyle: 'italic',
+          letterSpacing: '-0.025em',
           color: 'var(--text)',
           margin: '0 0 0.6rem',
+          lineHeight: 1.05,
         }}
       >
-        Skill Score
+        What I know, for now.
       </h2>
       <p
         style={{
@@ -323,10 +271,9 @@ export function Skills() {
           margin: '0 0 4rem',
         }}
       >
-        A skill-wise breakdown, screen by screen.
+        A stack wise breakdown, screen by screen.
       </p>
 
-      {/* two staggered phones */}
       <div
         className="skills-phones"
         style={{
@@ -337,44 +284,27 @@ export function Skills() {
           flexWrap: 'wrap',
         }}
       >
-        {/* Phone 1 — Skill Score radar */}
-        <Phone delay={0}>
+        <Phone delay={0} eyebrow="Skill radar">
+          <div style={{ marginBottom: '1rem' }}>
+            <Radar />
+          </div>
           <p
             style={{
-              fontFamily: 'IBM Plex Mono, monospace',
-              fontSize: '0.6rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
+              fontFamily: 'DM Sans, sans-serif',
+              fontSize: '0.72rem',
               color: 'var(--muted)',
-              margin: '0 0 0.4rem',
+              lineHeight: 1.5,
+              margin: 0,
             }}
           >
-            Skill Score
+            Relative strength across the categories I work in.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.4rem' }}>
-            <ScoreBadge />
-          </div>
-          <Radar />
         </Phone>
 
-        {/* Phone 2 — Skill-wise breakdown */}
-        <Phone delay={0.15} offsetY={56}>
-          <p
-            style={{
-              fontFamily: 'IBM Plex Mono, monospace',
-              fontSize: '0.6rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'var(--muted)',
-              margin: '0 0 1.4rem',
-              textAlign: 'left',
-            }}
-          >
-            Skill-wise breakdown
-          </p>
-          <div style={{ textAlign: 'left' }}>
-            <Breakdown />
-          </div>
+        <Phone delay={0.15} offsetY={56} eyebrow="Skill-wise breakdown">
+          {categories.map((c) => (
+            <CategoryBlock key={c.label} cat={c} />
+          ))}
         </Phone>
       </div>
 

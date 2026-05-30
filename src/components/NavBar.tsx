@@ -54,7 +54,7 @@ export function NavBar() {
 
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 flex items-center justify-between px-8 h-14"
+      className="fixed top-0 left-0 right-0 flex items-center justify-between px-5 md:px-8 h-14"
       initial={reduce ? false : { opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: EASE_BRAND }}
@@ -89,6 +89,7 @@ export function NavBar() {
           <motion.li key={label} variants={linkVariants}>
             <a
               href={href}
+              className="nav-link"
               style={{
                 fontFamily: 'DM Sans, sans-serif',
                 fontWeight: 400,
@@ -96,7 +97,8 @@ export function NavBar() {
                 color: 'var(--nav-text)',
                 opacity: 0.85,
                 textDecoration: 'none',
-                transition: 'opacity 0.15s ease',
+                transition: 'opacity 150ms ease, transform 90ms ease',
+                display: 'inline-block',
               }}
               onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '1')}
               onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '0.85')}
@@ -114,7 +116,8 @@ export function NavBar() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub"
-          style={{ color: '#ffffff', display: 'flex', alignItems: 'center' }}
+          className="nav-icon"
+          style={{ color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '44px', minHeight: '44px', transition: 'transform 90ms ease, opacity 150ms ease', opacity: 0.85 }}
         >
           <GitHubIcon size={20} />
         </a>
@@ -123,11 +126,19 @@ export function NavBar() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"
-          style={{ color: '#ffffff', display: 'flex', alignItems: 'center' }}
+          className="nav-icon"
+          style={{ color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '44px', minHeight: '44px', transition: 'transform 90ms ease, opacity 150ms ease', opacity: 0.85 }}
         >
           <LinkedInIcon size={20} />
         </a>
       </div>
+
+      <style>{`
+        .nav-link:hover { opacity: 1 !important; }
+        .nav-link:active { transform: scale(0.96); }
+        .nav-icon:hover { opacity: 1 !important; }
+        .nav-icon:active { transform: scale(0.92); }
+      `}</style>
     </motion.nav>
   )
 }

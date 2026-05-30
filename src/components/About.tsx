@@ -15,12 +15,13 @@ const fadeUp = (delay = 0, reduce = false) =>
 export function About() {
   const reduce = useReducedMotion() ?? false
   return (
-    <section id="about" style={{ padding: 'clamp(40px,6vw,80px) clamp(1.5rem,5vw,4rem)' }}>
+    <section id="about" style={{ padding: 'clamp(80px,12vw,160px) clamp(1.5rem,5vw,4rem)' }}>
       <motion.div
         initial={reduce ? false : { opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.85, ease: EASE_BRAND }}
+        className="about-card"
         style={{
           position: 'relative',
           width: '100%',
@@ -28,7 +29,6 @@ export function About() {
           margin: '0 auto',
           borderRadius: '16px',
           overflow: 'hidden',
-          aspectRatio: '16 / 7',
           background: '#111',
         }}
       >

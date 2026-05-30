@@ -30,7 +30,7 @@ export function Footer() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.5 }}
-        style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', fontFamily: 'DM Sans, sans-serif', fontSize: '0.85rem', color: 'var(--muted)' }}
+        style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', alignItems: 'center', fontFamily: 'DM Sans, sans-serif', fontSize: '0.85rem', color: 'var(--muted)' }}
       >
         {FOOTER_ITEMS.map((it) =>
           it.type === 'link' ? (
@@ -39,12 +39,12 @@ export function Footer() {
               variants={item}
               href={it.href}
               {...(it.external ? { target: '_blank', rel: 'noreferrer' } : {})}
-              style={{ color: 'var(--muted)', textDecoration: 'none' }}
+              style={{ color: 'var(--muted)', textDecoration: 'none', padding: '0.6rem 0', display: 'inline-block', minHeight: '44px', lineHeight: '1.8' }}
             >
               {it.label}
             </motion.a>
           ) : (
-            <motion.span key={it.label} variants={item}>{it.label}</motion.span>
+            <motion.span key={it.label} variants={item} style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px' }}>{it.label}</motion.span>
           )
         )}
       </motion.div>

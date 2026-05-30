@@ -24,7 +24,7 @@ function CardImages({ images, accent }: { images: string[]; accent: string }) {
             height: `${IMG_H}px`,
             objectFit: 'cover',
             borderRadius: '8px',
-            boxShadow: '0 4px 18px rgba(0,0,0,0.12)',
+            boxShadow: '0 4px 18px hsl(217 50% 18% / 0.12)',
             zIndex: 1,
           }}
         />
@@ -42,7 +42,7 @@ function CardImages({ images, accent }: { images: string[]; accent: string }) {
             height: `${IMG_H}px`,
             objectFit: 'cover',
             borderRadius: '8px',
-            boxShadow: '0 4px 18px rgba(0,0,0,0.12)',
+            boxShadow: '0 4px 18px hsl(217 50% 18% / 0.12)',
             zIndex: 1,
           }}
         />
@@ -59,7 +59,7 @@ function CardImages({ images, accent }: { images: string[]; accent: string }) {
           height: `${IMG_H}px`,
           objectFit: 'cover',
           borderRadius: '8px',
-          boxShadow: '0 8px 28px rgba(0,0,0,0.16)',
+          boxShadow: '0 8px 28px hsl(217 50% 18% / 0.16)',
           zIndex: 2,
         }}
       />
@@ -150,10 +150,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const reduce = useReducedMotion()
 
   return (
-    <motion.a
-      href={project.githubUrl}
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       initial={reduce ? false : { opacity: 0, y: 24 }}
@@ -161,27 +158,34 @@ export function ProjectCard({ project }: ProjectCardProps) {
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.65, ease: EASE_BRAND }}
       whileHover={reduce ? undefined : { y: -6 }}
+      whileTap={reduce ? undefined : { scale: 0.985, y: -2 }}
+      className="project-card"
       style={{
         display: 'block',
-        width: '440px',
         flexShrink: 0,
         border: `1px solid ${hovered ? 'var(--navy)' : 'var(--border)'}`,
         borderRadius: '12px',
         overflow: 'hidden',
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: 'border-color 0.2s',
+        transition: 'border-color 200ms ease, box-shadow 220ms ease',
         background: 'var(--bg)',
+        boxShadow: hovered ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
       }}
     >
-      {/* Image area */}
-      <div style={{ aspectRatio: '16 / 10', overflow: 'hidden' }}>
-        {project.images?.length ? (
-          <CardImages images={project.images} accent={project.accent} />
-        ) : (
-          <NoImagePlaceholder id={project.id} accent={project.accent} />
-        )}
-      </div>
+      {/* Image area — links to live site if available, else GitHub */}
+      <a
+        href={project.liveUrl ?? project.githubUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ display: 'block', textDecoration: 'none' }}
+      >
+        <div style={{ aspectRatio: '16 / 10', overflow: 'hidden' }}>
+          {project.images?.length ? (
+            <CardImages images={project.images} accent={project.accent} />
+          ) : (
+            <NoImagePlaceholder id={project.id} accent={project.accent} />
+          )}
+        </div>
+      </a>
 
       {/* Card body */}
       <div style={{ padding: '1.25rem 1.5rem' }}>
@@ -195,18 +199,60 @@ export function ProjectCard({ project }: ProjectCardProps) {
         }}>
           {project.title}
         </p>
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontWeight: 400,
-          fontSize: '0.8rem',
-          color: 'var(--muted)',
-          margin: 0,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-        }}>
-          {project.category}
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 400,
+            fontSize: '0.8rem',
+            color: 'var(--muted)',
+            margin: 0,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+          }}>
+            {project.category}
+          </p>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: '0.65rem',
+                  letterSpacing: '0.06em',
+                  color: 'var(--navy)',
+                  textDecoration: 'none',
+                  border: '1px solid var(--navy)',
+                  borderRadius: '100px',
+                  padding: '0.2rem 0.55rem',
+                }}
+              >
+                live ↗
+              </a>
+            )}
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '0.65rem',
+                letterSpacing: '0.06em',
+                color: 'var(--muted)',
+                textDecoration: 'none',
+                border: '1px solid var(--border)',
+                borderRadius: '100px',
+                padding: '0.2rem 0.55rem',
+              }}
+            >
+              github ↗
+            </a>
+          </div>
+        </div>
       </div>
-    </motion.a>
+    </motion.div>
   )
 }
