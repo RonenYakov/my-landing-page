@@ -215,7 +215,8 @@ Use nano-banana to generate a placeholder image for the hero center:
 - Real photo folder: `/public/hero/` — Ronen drops real photo here later
 
 ---
-
+## must follow my-design-skill ui/ux rules
+1.follow all ui and ux rules
 ## Build Order
 1. Scaffold Vite + install deps + copy fonts + globals.css + CSS vars
 2. NavBar
