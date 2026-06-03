@@ -96,10 +96,11 @@ h1, h2, h3 {
   .project-card { width: 100%; }
 }
 
-/* About card — wide cinematic on desktop, taller on mobile so text breathes */
+/* About card — wide cinematic on desktop. On mobile, drop the fixed aspect-ratio
+   and let height grow with content so the eyebrow + title can't be clipped at top. */
 .about-card { aspect-ratio: 16 / 7; }
 @media (max-width: 767px) {
-  .about-card { aspect-ratio: 4 / 5; }
+  .about-card { aspect-ratio: auto; min-height: 88vw; }
 }
 
 /* Grain overlay */

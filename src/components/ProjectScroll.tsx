@@ -103,7 +103,7 @@ export function ProjectScroll() {
             fontSize: 'clamp(1.8rem,3.5vw,3.2rem)',
             fontWeight: 400,
             letterSpacing: '-0.03em',
-            color: 'var(--black',
+            color: 'var(--text)',
             margin: 0,
             lineHeight: 1,
           }}>
@@ -160,7 +160,7 @@ function MobileProjects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.65, ease: EASE_BRAND, delay: 0.06 }}
-          style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 'clamp(2rem,8vw,3rem)', fontWeight: 400, letterSpacing: '-0.02em', color: 'var(--text)', margin: 0, lineHeight: 1.02 }}
+          style={{ fontFamily: "'Moderniz', sans-serif", fontSize: 'clamp(1.7rem,7vw,2.6rem)', fontWeight: 400, letterSpacing: '-0.03em', color: 'var(--text)', margin: 0, lineHeight: 1 }}
         >
           Selected Work
         </motion.h2>
