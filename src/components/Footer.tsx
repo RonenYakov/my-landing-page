@@ -6,7 +6,6 @@ const FOOTER_ITEMS = [
   { type: 'link' as const, href: 'mailto:ronen0902@gmail.com', label: 'ronen0902@gmail.com' },
   { type: 'link' as const, href: 'https://github.com/RonenYakov', label: 'github', external: true },
   { type: 'link' as const, href: 'https://www.linkedin.com/in/ronen-yakobov-b217211ab/', label: 'linkedin', external: true },
-  { type: 'text' as const, label: '+972 054-266-4674' },
 ]
 
 export function Footer() {

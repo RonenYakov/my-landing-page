@@ -2,3 +2,9 @@ node_modules
 dist
 .env
 .env.local
+
+# Local Claude Code settings — machine-specific paths, never commit
+.claude/settings.local.json
+
+# Superpowers brainstorm scratch/state — local only
+.superpowers/
