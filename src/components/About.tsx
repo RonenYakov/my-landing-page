@@ -6,11 +6,11 @@ const fadeUp = (delay = 0, reduce = false) =>
   reduce
     ? { initial: false as const, whileInView: { opacity: 1, y: 0 } }
     : {
-        initial: { opacity: 0, y: 20 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, amount: 0.15 },
-        transition: { duration: 0.75, ease: EASE_BRAND, delay },
-      }
+      initial: { opacity: 0, y: 20 },
+      whileInView: { opacity: 1, y: 0 },
+      viewport: { once: true, amount: 0.15 },
+      transition: { duration: 0.75, ease: EASE_BRAND, delay },
+    }
 
 export function About() {
   const reduce = useReducedMotion() ?? false
@@ -94,7 +94,7 @@ export function About() {
             color: 'rgba(255,255,255,0.72)',
             maxWidth: '52ch',
           }}>
-            I'm at the start, and I know it. But I'm the kind of person who reads the paper, then builds the thing — and doesn't stop until it makes sense. Curiosity about AI pulled me deep during my studies, and ambition kept me building after: fullstack apps, ML models, low-level systems. I'm creative, I move fast, and I'm ready to do it inside a team.
+            I'm at the start, and I know it. But I'm the kind of person who reads the paper, then builds the thing  and doesn't stop until it makes sense. Curiosity about AI pulled me deep during my studies, and ambition kept me building after: fullstack apps, ML models, low-level systems. I'm creative, I move fast, and I'm ready to do it inside a team.
           </motion.p>
         </div>
       </motion.div>
