@@ -9,7 +9,11 @@ import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { Intro } from './components/Intro'
 import { Terminal } from './components/Terminal'
+import { FieldRibbon } from './components/FieldRibbon'
 import { installConsoleEgg } from './lib/consoleEgg'
+// import { FunFacts } from './components/FunFacts'
+// import { ThemeProvider } from './ThemeContext'
+// import { BackToTop } from './components/BackToTop'
 
 export default function App() {
   useLenis()
@@ -21,11 +25,15 @@ export default function App() {
       <main style={{ paddingTop: '56px' }}>
         <SplitHero />
         <About />
+        <FieldRibbon />
         <ProjectScroll />
         <Skills />
+        <FieldRibbon />
         <Contact />
+        {/* <FunFacts /> */}
       </main>
       <Footer />
+      {/* <BackToTop /> */}
       <Terminal />
     </>
   )
