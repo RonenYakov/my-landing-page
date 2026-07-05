@@ -93,62 +93,23 @@ first understand the vibe and use the fonts from my fonts folder start with mode
 
 ---
 
-## SplitHero (see `/docs/hero-reference.png`)
+## SplitHero (3D redesign, 2026-07)
 
-Full viewport (`100vh`), white background. A vertical divider  that gives a feling like it  splits the
-viewport into left (AI/research) and right (Fullstack/builder) halves but just a fell not a straight line.
+Full viewport (`100dvh`), white background. Centerpiece is `HeroField.tsx`: a react-three-fiber
+particle field (~2600 points desktop / ~860 mobile) where the left side drifts as an organic
+neural cloud (`--navy-muted`, AI identity) and the right side snaps into a precise 3D lattice
+(`--navy`, fullstack identity). A springed frontier (`stiffness: 60, damping: 18`) morphs
+particles between the two forms and is driven by mouse X (mouse left = AI takes over, same
+semantics as the old laptop wipe). Mouse Y gives a subtle parallax tilt.
 
-**Mouse interaction**: On `mousemove`, the divider tracks cursor X.
-Use Framer Motion `useSpring({ stiffness: 60, damping: 18 })` on a `motionValue`.
-The divider is a `1px` line, `var(--border)` color, `position: absolute`, `z-index: 2`.
-Left and right panels are `position: absolute`, each with `overflow: hidden`.
-Panel widths update via inline style tied to the spring value.
-or if you see a better option tel me.
+- Entrance: particles assemble from a scatter sphere over 1.9s; held ~2.2s on first visit until the boot overlay lifts.
+- Hairline frontier divider rendered in-scene (thin plane, `#8fa0b8`, opacity 0.3), hidden when fully committed to one side.
+- Side labels unchanged: `ai native` left / `<full stack>` right, Moderniz.
+- Mobile: labels stacked top/bottom, frontier auto-cycles 0↔100 (no cursor).
+- Reduced motion: static balanced field, frontier locked at center, `frameloop="demand"`.
+- No glow, no gradients on particles; round disc sprites; `dpr` capped at 1.75.
 
-**Floating snippets — left side (AI identity):**
-These are scattered `position: absolute` elements inside the left panel. Mix of two styles:
-
-Style A — VS Code feel: `background: #f0ededff`, `border-radius: 6px`, `padding: 8px 12px`,
-`font-family: IBM Plex Mono`, `font-size: 0.72rem`, colored token text (strings `#ce9178`,
-keywords `#569cd6`, comments `#6a9955`).we may use actual code screenshots from my project fell free to use more of a sience style learning curves neural networks.
-
-Style B — plain text: just `IBM Plex Mono`, `var(--muted)` or `var(--navy-muted)`, no bg .
-
-Snippet content for left panel (hardcode these):
-```
-// Style A positions (VS Code pill)
-top:12%, left:8%   →  loss: 0.0423
-top:35%, left:5%   →  model = SNN(input_size=64)
-top:58%, left:10%  →  epoch 47/100 ████████░░ 82%
-bottom:20%, left:6% → torch.save(model, 'seizure_v3.pt')
-
-// Style B positions (plain muted text)
-top:22%, left:20%  →  import torch
-top:70%, left:15%  →  accuracy: 94.2%
-top:45%, left:3%   →  @dataclass
-```
-
-**Floating snippets — right side (Builder identity):**
-Same two styles, mirrored.
-
-```
-// Style A (VS Code pill)
-top:15%, right:8%   →  const [data, setData] = useState([])
-top:40%, right:5%   →  <motion.div whileHover={{ scale: 1.02 }}>
-bottom:22%, right:7% → npm run build ✓ 847ms
-
-// Style B (plain muted)
-top:28%, right:18%  →  border-radius: 12px
-top:62%, right:12%  →  export default App
-top:50%, right:3%   →  display: flex
-```
-
-**Center of hero** — no name, no tagline. Just the divider  and the snippets.
-The emptiness in the center is intentional — the face will be composited here later
-(note: `/public/face.png` placeholder — to be added in a future session) also we may use text like basic terms HTML CSS PAYTORCH and more.
-
-**Bottom center**: `scroll ↓` — DM Sans 400, `var(--muted)`, `position: absolute`,
-`bottom: 5%`, fades on scroll start.
+**Bottom center**: `↓` — DM Sans 400, `var(--muted)`, fades on scroll start.
 
 ---
 
