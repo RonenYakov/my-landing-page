@@ -10,7 +10,6 @@ import { Footer } from './components/Footer'
 import { Intro } from './components/Intro'
 import { Terminal } from './components/Terminal'
 import { FieldRibbon } from './components/FieldRibbon'
-import { ScrollBuild } from './components/ScrollBuild'
 import { installConsoleEgg } from './lib/consoleEgg'
 // import { FunFacts } from './components/FunFacts'
 // import { ThemeProvider } from './ThemeContext'
@@ -29,7 +28,7 @@ export default function App() {
         <FieldRibbon />
         <ProjectScroll />
         <Skills />
-        <ScrollBuild />
+        <FieldRibbon />
         <Contact />
         {/* <FunFacts /> */}
       </main>
