@@ -105,7 +105,7 @@ function HeroCodeBlock({ b, index, springX, springY, cursorX, cursorY, reduced, 
     return t * t * (3 - 2 * t)
   })
   const focus = useSpring(focusRaw, { stiffness: 170, damping: 26 })
-  const opacity = useTransform(focus, [0, 1], reduced ? [0.6, 0.6] : [0.35, 1])
+  const opacity = useTransform(focus, [0, 1], reduced ? [0.7, 0.7] : [0.55, 1])
   const color = useTransform(focus, [0, 1], [CODE_REST, CODE_FOCUS])
 
   // depth parallax: blocks drift against the cursor at their own rate
@@ -132,8 +132,9 @@ function HeroCodeBlock({ b, index, springX, springY, cursorX, cursorY, reduced, 
           transition={reduced ? undefined : { duration: 6 + index * 0.8, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.72rem',
-            lineHeight: 1.6,
+            fontSize: '0.85rem',
+            fontWeight: 500,
+            lineHeight: 1.65,
             letterSpacing: '0.01em',
             whiteSpace: 'pre',
             color,
