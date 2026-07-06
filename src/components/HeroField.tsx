@@ -11,15 +11,15 @@ import type { MotionValue } from 'motion/react'
  * so mouse-left still means "AI takes over".
  */
 
-// #4a6080 (chaos / AI) → #1a2e4a (order / full stack)
-const CHAOS_RGB = [74 / 255, 96 / 255, 128 / 255]
+// #5a6f8f (chaos / AI, softened) → #1a2e4a (order / full stack)
+const CHAOS_RGB = [90 / 255, 111 / 255, 143 / 255]
 const ORDER_RGB = [26 / 255, 46 / 255, 74 / 255]
 const BAND = 0.07 // half-width of the blend zone around the frontier, in station units
 
 type FieldConfig = { cols: number; rows: number; layers: number; width: number; dy: number; dz: number }
 
-const DESKTOP: FieldConfig = { cols: 40, rows: 13, layers: 5, width: 5.6, dy: 0.17, dz: 0.24 }
-const COMPACT: FieldConfig = { cols: 18, rows: 16, layers: 3, width: 2.4, dy: 0.15, dz: 0.3 }
+const DESKTOP: FieldConfig = { cols: 32, rows: 11, layers: 4, width: 5.6, dy: 0.19, dz: 0.28 }
+const COMPACT: FieldConfig = { cols: 14, rows: 13, layers: 3, width: 2.4, dy: 0.17, dz: 0.3 }
 
 function buildField(cfg: FieldConfig) {
   const count = cfg.cols * cfg.rows * cfg.layers
@@ -109,7 +109,6 @@ function MorphField({ splitX, tiltY, compact, reduced, introDelay }: FieldProps)
   const groupRef = useRef<THREE.Group>(null)
   const posAttrRef = useRef<THREE.BufferAttribute>(null)
   const colAttrRef = useRef<THREE.BufferAttribute>(null)
-  const dividerRef = useRef<THREE.Mesh>(null)
   const startRef = useRef(-1)
 
   useFrame((state) => {
@@ -139,18 +138,9 @@ function MorphField({ splitX, tiltY, compact, reduced, introDelay }: FieldProps)
       const wob1 = Math.sin(t * speed[i] + phase[i])
       const wob2 = Math.cos(t * speed[i] * 0.8 + phase[i] * 1.7)
 
-      let fx = chaos[i3] + (order[i3] - chaos[i3]) * tt + wob1 * drift
-      let fy = chaos[i3 + 1] + (order[i3 + 1] - chaos[i3 + 1]) * tt + wob2 * drift
+      const fx = chaos[i3] + (order[i3] - chaos[i3]) * tt + wob1 * drift
+      const fy = chaos[i3 + 1] + (order[i3 + 1] - chaos[i3 + 1]) * tt + wob2 * drift
       const fz = chaos[i3 + 2] + (order[i3 + 2] - chaos[i3 + 2]) * tt + wob1 * wob2 * drift * 0.5
-
-      // particles caught on the frontier sizzle a little
-      if (!reduced) {
-        const edge = 1 - Math.min(1, Math.abs(u - b) / BAND)
-        if (edge > 0) {
-          fy += Math.sin(t * 6 + phase[i] * 9) * 0.05 * edge
-          fx += Math.cos(t * 5 + phase[i] * 7) * 0.03 * edge
-        }
-      }
 
       pos[i3] = scatter[i3] * (1 - intro) + fx * intro
       pos[i3 + 1] = scatter[i3 + 1] * (1 - intro) + fy * intro
@@ -167,13 +157,6 @@ function MorphField({ splitX, tiltY, compact, reduced, introDelay }: FieldProps)
     const my = Math.max(0, Math.min(100, tiltY.get()))
     group.rotation.y = (mx / 100 - 0.5) * 0.14 + (reduced ? 0 : Math.sin(t * 0.12) * 0.03)
     group.rotation.x = (0.5 - my / 100) * 0.1
-
-    const divider = dividerRef.current
-    if (divider) {
-      divider.position.x = (b - 0.5) * cfg.width
-      const mat = divider.material as THREE.MeshBasicMaterial
-      mat.opacity = (b < 0.03 || b > 0.97 ? 0 : 0.3) * intro
-    }
   })
 
   return (
@@ -187,18 +170,13 @@ function MorphField({ splitX, tiltY, compact, reduced, introDelay }: FieldProps)
           map={sprite}
           vertexColors
           transparent
-          opacity={0.9}
-          size={0.045}
+          opacity={0.55}
+          size={0.04}
           sizeAttenuation
           depthWrite={false}
           alphaTest={0.05}
         />
       </points>
-      {/* hairline frontier, the 3D descendant of the old 1px divider */}
-      <mesh ref={dividerRef}>
-        <planeGeometry args={[0.008, 3.2]} />
-        <meshBasicMaterial color="#8fa0b8" transparent opacity={0} depthWrite={false} />
-      </mesh>
     </group>
   )
 }
