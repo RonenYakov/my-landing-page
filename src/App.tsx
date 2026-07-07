@@ -4,7 +4,7 @@ import { NavBar } from './components/NavBar'
 import { SplitHero } from './components/SplitHero'
 import { ProjectScroll } from './components/ProjectScroll'
 import { About } from './components/About'
-import { Skills } from './components/Skills'
+import { SkillsCinema } from './components/SkillsCinema'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { Intro } from './components/Intro'
@@ -27,8 +27,7 @@ export default function App() {
         <About />
         <FieldRibbon />
         <ProjectScroll />
-        <Skills />
-        <FieldRibbon />
+        <SkillsCinema />
         <Contact />
         {/* <FunFacts /> */}
       </main>
