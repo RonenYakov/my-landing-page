@@ -99,14 +99,15 @@ export function SkillsCinema() {
   const imagesRef = useRef<(HTMLImageElement | null)[]>([])
   const progressRef = useRef(0)
   const [progress, setProgress] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
-  const [reduced, setReduced] = useState(false)
+  // lazy init: decide the branch (pinned canvas vs static fallback) before the
+  // first paint. Flipping branches *after* GSAP has pinned the section crashes
+  // React (it reparents the DOM node into a pin-spacer outside React's tree).
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
+  const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
 
   useEffect(() => {
     const mqMobile = window.matchMedia('(max-width: 767px)')
     const mqReduced = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setIsMobile(mqMobile.matches)
-    setReduced(mqReduced.matches)
     const onMobile = (e: MediaQueryListEvent) => setIsMobile(e.matches)
     const onReduced = (e: MediaQueryListEvent) => setReduced(e.matches)
     mqMobile.addEventListener('change', onMobile)
