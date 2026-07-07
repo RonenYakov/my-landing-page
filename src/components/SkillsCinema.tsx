@@ -26,6 +26,12 @@ const GROUPS: SkillGroup[] = [
 
 const FADE = 0.06 // fraction of scrub used for each group's fade in/out
 
+// Mobile band composition: the frame draws as a full-bleed horizontal strip.
+// ZOOM > 1 crops the frame's sides (lattice is centered, safe); BAND_TOP is
+// the strip's top edge as a fraction of viewport height, just under the text.
+const MOBILE_ZOOM = 1.4
+const MOBILE_BAND_TOP = 0.34
+
 // opacity of group i at progress p; groups own equal thirds, last group holds at the end
 function groupOpacity(i: number, p: number): number {
   const start = i / GROUPS.length
@@ -135,18 +141,35 @@ export function SkillsCinema() {
     if (!img || !img.complete || img.naturalWidth === 0) return
     const cw = canvas.width
     const ch = canvas.height
-    // desktop: cover-fit (fill the viewport, crop the 16:9 frame). mobile portrait:
-    // contain-fit so the whole lattice reads as a horizontal band, anchored low
-    // (0.66) so the upper area stays clear for the skill text. White footage bg
-    // blends into the page, so there's no visible letterbox edge.
+    // desktop: cover-fit (fill the viewport, crop the 16:9 frame).
+    // mobile portrait: full-bleed strip — zoomed past the screen width so it
+    // has no left/right edges, anchored just below the skill text, with
+    // top/bottom alpha-feathered so the frame's off-white studio background
+    // melts into the page instead of reading as a boxed image.
     const scale = isMobile
-      ? Math.min(cw / img.naturalWidth, ch / img.naturalHeight)
+      ? (cw / img.naturalWidth) * MOBILE_ZOOM
       : Math.max(cw / img.naturalWidth, ch / img.naturalHeight)
     const dw = img.naturalWidth * scale
     const dh = img.naturalHeight * scale
-    const offY = isMobile ? (ch - dh) * 0.66 : (ch - dh) / 2
+    const offX = (cw - dw) / 2
+    const offY = isMobile ? ch * MOBILE_BAND_TOP : (ch - dh) / 2
     ctx.clearRect(0, 0, cw, ch)
-    ctx.drawImage(img, (cw - dw) / 2, offY, dw, dh)
+    ctx.drawImage(img, offX, offY, dw, dh)
+    if (isMobile) {
+      const f = dh * 0.16 // feather depth
+      ctx.globalCompositeOperation = 'destination-out'
+      let g = ctx.createLinearGradient(0, offY, 0, offY + f)
+      g.addColorStop(0, 'rgba(0,0,0,1)')
+      g.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = g
+      ctx.fillRect(0, offY - 1, cw, f + 1)
+      g = ctx.createLinearGradient(0, offY + dh - f, 0, offY + dh)
+      g.addColorStop(0, 'rgba(0,0,0,0)')
+      g.addColorStop(1, 'rgba(0,0,0,1)')
+      ctx.fillStyle = g
+      ctx.fillRect(0, offY + dh - f, cw, f + 1)
+      ctx.globalCompositeOperation = 'source-over'
+    }
   }
 
   // preload frames when the section approaches (1 viewport early)
