@@ -68,6 +68,89 @@ const BLOCKS: CodeBlock[] = [
   },
 ]
 
+function CodeLines({ lines }: { lines: Seg[][] }) {
+  return (
+    <>
+      {lines.map((segs, li) => (
+        <div key={li}>
+          {segs.map((seg, si) => (
+            <span key={si} style={seg.dim ? { color: COMMENT } : undefined}>{seg.t}</span>
+          ))}
+        </div>
+      ))}
+    </>
+  )
+}
+
+type MobileBlock = { lines: Seg[][]; side: 'ai' | 'stack'; pos: React.CSSProperties }
+
+// Two snippets only on mobile: one per identity, trimmed to 3 short lines.
+// Positioned in the quiet zones between the stacked labels and the field's
+// dense center; emphasis follows the auto-cycling frontier instead of a cursor.
+const MOBILE_BLOCKS: MobileBlock[] = [
+  {
+    side: 'ai',
+    pos: { top: '26%', left: '1.4rem' },
+    lines: [
+      [{ t: 'class SNN(nn.Module):' }],
+      [{ t: '  self.fc1 = nn.Linear(64, 128)' }],
+      [{ t: '  self.lif1 = snn.Leaky(beta=0.9)' }, { t: '  # EEG', dim: true }],
+    ],
+  },
+  {
+    side: 'stack',
+    pos: { bottom: '25%', right: '1.4rem' },
+    lines: [
+      [{ t: 'const app = express()' }],
+      [{ t: 'app.use(cors({ origin: ORIGINS }))' }],
+      [{ t: 'app.listen(8080)' }, { t: '  // live', dim: true }],
+    ],
+  },
+]
+
+function MobileHeroCode({ b, index, springX, reduced, introDelay }: {
+  b: MobileBlock
+  index: number
+  springX: MotionValue<number>
+  reduced: boolean
+  introDelay: number
+}) {
+  // springX: 0 = AI side committed, 100 = full-stack side committed.
+  // Each block wakes when the frontier swings to its identity's side.
+  const emphasis = useTransform(springX, b.side === 'ai' ? [0, 100] : [100, 0], [1, 0])
+  const eased = useSpring(emphasis, { stiffness: 120, damping: 24 })
+  const opacity = useTransform(eased, [0, 1], reduced ? [0.55, 0.55] : [0.35, 0.9])
+  const color = useTransform(eased, [0, 1], [CODE_REST, CODE_FOCUS])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: introDelay + 1.2 + index * 0.15, duration: 0.7 }}
+      style={{ position: 'absolute', ...b.pos }}
+    >
+      <motion.div style={{ opacity }}>
+        <motion.div
+          animate={reduced ? undefined : { y: [0, -5, 0] }}
+          transition={reduced ? undefined : { duration: 6 + index, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '0.6rem',
+            fontWeight: 500,
+            lineHeight: 1.6,
+            letterSpacing: '0.01em',
+            whiteSpace: 'pre',
+            color,
+            textAlign: 'left',
+          }}
+        >
+          <CodeLines lines={b.lines} />
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 function HeroCodeBlock({ b, index, springX, springY, cursorX, cursorY, reduced, introDelay }: {
   b: CodeBlock
   index: number
@@ -140,13 +223,7 @@ function HeroCodeBlock({ b, index, springX, springY, cursorX, cursorY, reduced, 
             color,
           }}
         >
-          {b.lines.map((segs, li) => (
-            <div key={li}>
-              {segs.map((seg, si) => (
-                <span key={si} style={seg.dim ? { color: COMMENT } : undefined}>{seg.t}</span>
-              ))}
-            </div>
-          ))}
+          <CodeLines lines={b.lines} />
         </motion.div>
       </motion.div>
     </motion.div>
@@ -277,6 +354,24 @@ export function SplitHero() {
             springY={springY}
             cursorX={cursorX}
             cursorY={cursorY}
+            reduced={reduced}
+            introDelay={introDelay}
+          />
+        ))}
+      </div>
+
+      {/* ── Mobile: two trimmed snippets, emphasis follows the auto-cycle ── */}
+      <div
+        className="md:hidden"
+        aria-hidden
+        style={{ position: 'absolute', inset: 0, zIndex: 4, pointerEvents: 'none' }}
+      >
+        {MOBILE_BLOCKS.map((b, i) => (
+          <MobileHeroCode
+            key={i}
+            b={b}
+            index={i}
+            springX={springX}
             reduced={reduced}
             introDelay={introDelay}
           />
