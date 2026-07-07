@@ -55,7 +55,7 @@ function Tag({ label }: { label: string }) {
   )
 }
 
-function GroupOverlay({ group, opacity }: { group: SkillGroup; opacity: number }) {
+function GroupOverlay({ group, opacity, mobile }: { group: SkillGroup; opacity: number; mobile: boolean }) {
   return (
     <div
       style={{
@@ -63,8 +63,12 @@ function GroupOverlay({ group, opacity }: { group: SkillGroup; opacity: number }
         inset: 0,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        paddingLeft: 'clamp(2rem, 8vw, 8rem)',
+        // desktop: text vertically centered in the wide frame. mobile portrait:
+        // text anchored in the upper third, above the contain-fit lattice band.
+        justifyContent: mobile ? 'flex-start' : 'center',
+        paddingTop: mobile ? '6.5rem' : undefined,
+        paddingLeft: mobile ? 'clamp(1.5rem, 5vw, 2rem)' : 'clamp(2rem, 8vw, 8rem)',
+        paddingRight: mobile ? 'clamp(1.5rem, 5vw, 2rem)' : undefined,
         opacity,
         transform: `translateY(${(1 - opacity) * 14}px)`,
         pointerEvents: 'none',
@@ -74,17 +78,17 @@ function GroupOverlay({ group, opacity }: { group: SkillGroup; opacity: number }
       <h3
         style={{
           fontFamily: "'Moderniz', sans-serif",
-          fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+          fontSize: mobile ? 'clamp(1.7rem, 7vw, 2.4rem)' : 'clamp(2rem, 4vw, 3.5rem)',
           fontWeight: 400,
           letterSpacing: '-0.025em',
           color: 'var(--text)',
-          margin: '0 0 1.4rem',
+          margin: mobile ? '0 0 1.1rem' : '0 0 1.4rem',
           lineHeight: 1.05,
         }}
       >
         {group.title}
       </h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', maxWidth: 480 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', maxWidth: mobile ? undefined : 480 }}>
         {group.tags.map((t) => (
           <Tag key={t} label={t} />
         ))}
@@ -95,6 +99,7 @@ function GroupOverlay({ group, opacity }: { group: SkillGroup; opacity: number }
 
 export function SkillsCinema() {
   const wrapRef = useRef<HTMLDivElement>(null)
+  const pinRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imagesRef = useRef<(HTMLImageElement | null)[]>([])
   const progressRef = useRef(0)
@@ -130,16 +135,23 @@ export function SkillsCinema() {
     if (!img || !img.complete || img.naturalWidth === 0) return
     const cw = canvas.width
     const ch = canvas.height
-    const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight)
+    // desktop: cover-fit (fill the viewport, crop the 16:9 frame). mobile portrait:
+    // contain-fit so the whole lattice reads as a horizontal band, anchored low
+    // (0.66) so the upper area stays clear for the skill text. White footage bg
+    // blends into the page, so there's no visible letterbox edge.
+    const scale = isMobile
+      ? Math.min(cw / img.naturalWidth, ch / img.naturalHeight)
+      : Math.max(cw / img.naturalWidth, ch / img.naturalHeight)
     const dw = img.naturalWidth * scale
     const dh = img.naturalHeight * scale
+    const offY = isMobile ? (ch - dh) * 0.66 : (ch - dh) / 2
     ctx.clearRect(0, 0, cw, ch)
-    ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh)
+    ctx.drawImage(img, (cw - dw) / 2, offY, dw, dh)
   }
 
   // preload frames when the section approaches (1 viewport early)
   useEffect(() => {
-    if (isMobile || reduced || !wrapRef.current) return
+    if (reduced || !wrapRef.current) return
     const el = wrapRef.current
     const observer = new IntersectionObserver(
       (entries) => {
@@ -164,14 +176,15 @@ export function SkillsCinema() {
 
   // canvas sizing + pin/scrub
   useEffect(() => {
-    if (isMobile || reduced || !wrapRef.current || !canvasRef.current) return
+    if (reduced || !wrapRef.current || !pinRef.current || !canvasRef.current) return
     const wrap = wrapRef.current
+    const pinEl = pinRef.current
     const canvas = canvasRef.current
 
     const size = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.75)
-      canvas.width = wrap.clientWidth * dpr
-      canvas.height = wrap.clientHeight * dpr
+      canvas.width = pinEl.clientWidth * dpr
+      canvas.height = pinEl.clientHeight * dpr
       drawFrame(progressRef.current)
     }
     size()
@@ -180,11 +193,18 @@ export function SkillsCinema() {
     let ctx: ReturnType<typeof gsap.context> | null = null
     const raf = requestAnimationFrame(() => {
       ctx = gsap.context(() => {
+        // trigger on the outer wrapper but pin the inner section, so GSAP's
+        // pin-spacer is inserted *inside* wrapRef (a node React owns and never
+        // re-commits) instead of among <main>'s React-managed siblings. Pinning
+        // the section directly reparents it in <main> and races with motion's
+        // whileInView commit in the neighbouring Projects section → insertBefore
+        // NotFoundError at mount.
         ScrollTrigger.create({
           trigger: wrap,
           start: 'top top',
-          end: '+=250%',
-          pin: true,
+          // shorter pin on mobile — thumb-scrolling 2.5 screens feels long
+          end: isMobile ? '+=180%' : '+=250%',
+          pin: pinEl,
           scrub: true,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -203,48 +223,50 @@ export function SkillsCinema() {
     }
   }, [isMobile, reduced])
 
-  if (isMobile || reduced) return <SkillsStatic />
+  if (reduced) return <SkillsStatic />
 
   return (
-    <section id="skills" ref={wrapRef} style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
-      {/* progress line */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          height: 2,
-          background: 'var(--navy)',
-          width: `${progress * 100}%`,
-          zIndex: 10,
-          transition: 'width 0.05s linear',
-        }}
-      />
+    <div ref={wrapRef}>
+      <section id="skills" ref={pinRef} style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+        {/* progress line */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: 2,
+            background: 'var(--navy)',
+            width: `${progress * 100}%`,
+            zIndex: 10,
+            transition: 'width 0.05s linear',
+          }}
+        />
 
-      <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} aria-hidden />
+        <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} aria-hidden />
 
-      {/* fixed eyebrow */}
-      <p
-        style={{
-          position: 'absolute',
-          top: 'clamp(2rem, 5vw, 4rem)',
-          left: 'clamp(2rem, 8vw, 8rem)',
-          fontFamily: 'IBM Plex Mono, monospace',
-          fontSize: '0.72rem',
-          letterSpacing: '0.28em',
-          textTransform: 'uppercase',
-          color: 'var(--muted)',
-          margin: 0,
-          zIndex: 5,
-        }}
-      >
-        (02) skills
-      </p>
+        {/* fixed eyebrow — pushed clear of the 56px navbar on mobile */}
+        <p
+          style={{
+            position: 'absolute',
+            top: isMobile ? '4.5rem' : 'clamp(2rem, 5vw, 4rem)',
+            left: isMobile ? 'clamp(1.5rem, 5vw, 2rem)' : 'clamp(2rem, 8vw, 8rem)',
+            fontFamily: 'IBM Plex Mono, monospace',
+            fontSize: '0.72rem',
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: 'var(--muted)',
+            margin: 0,
+            zIndex: 5,
+          }}
+        >
+          (02) skills
+        </p>
 
-      {GROUPS.map((g, i) => (
-        <GroupOverlay key={g.title} group={g} opacity={groupOpacity(i, progress)} />
-      ))}
-    </section>
+        {GROUPS.map((g, i) => (
+          <GroupOverlay key={g.title} group={g} opacity={groupOpacity(i, progress)} mobile={isMobile} />
+        ))}
+      </section>
+    </div>
   )
 }
 
