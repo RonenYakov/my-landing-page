@@ -3,9 +3,9 @@ import { motion, useReducedMotion } from 'motion/react'
 const EASE_BRAND: [number, number, number, number] = [0.77, 0, 0.175, 1]
 
 const CV_FACTS: { label: string; value: string }[] = [
-  { label: 'full-stack', value: 'React, Node.js' },
-  { label: 'ai / ml', value: 'PyTorch, NLP' },
-  { label: 'systems', value: 'C++, multithreading' },
+  { label: 'front-end', value: 'React, TypeScript' },
+  { label: 'back-end', value: 'Node.js, Express, PostgreSQL' },
+  { label: 'tooling', value: 'Docker, AWS, Vercel' },
 ]
 
 export function Contact() {
