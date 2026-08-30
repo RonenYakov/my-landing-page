@@ -13,6 +13,9 @@ const EASE_BRAND: [number, number, number, number] = [0.77, 0, 0.175, 1]
 const ORDER = [
   'social-platform',
   'wedding-invitation',
+  'url-shortener',
+  'challenge-tracker',
+  'vote-match',
   'text-classification',
   'stock-trading-agent',
   'seizure-detection',

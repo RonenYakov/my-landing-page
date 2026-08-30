@@ -199,7 +199,17 @@ export function ProjectCard({ project }: ProjectCardProps) {
         }}>
           {project.title}
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 400,
+          fontSize: '0.85rem',
+          lineHeight: 1.5,
+          color: 'var(--muted)',
+          margin: 0,
+        }}>
+          {project.description}
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.75rem' }}>
           <p style={{
             fontFamily: "'DM Sans', sans-serif",
             fontWeight: 400,
@@ -232,6 +242,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 live ↗
               </a>
             )}
+            {project.githubUrl && (
             <a
               href={project.githubUrl}
               target="_blank"
@@ -250,6 +261,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             >
               github ↗
             </a>
+            )}
           </div>
         </div>
       </div>
