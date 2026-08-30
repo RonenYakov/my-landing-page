@@ -2,6 +2,12 @@ import { motion, useReducedMotion } from 'motion/react'
 
 const EASE_BRAND: [number, number, number, number] = [0.77, 0, 0.175, 1]
 
+const CV_FACTS: { label: string; value: string }[] = [
+  { label: 'full-stack', value: 'React, Node.js' },
+  { label: 'ai / ml', value: 'PyTorch, NLP' },
+  { label: 'systems', value: 'C++, multithreading' },
+]
+
 export function Contact() {
   const reduce = useReducedMotion()
 
@@ -48,61 +54,134 @@ export function Contact() {
           lineHeight: 1.05,
           letterSpacing: '-0.03em',
           color: 'var(--text)',
-          margin: '0 0 2rem',
+          margin: '0 0 clamp(2.5rem,5vw,4rem)',
         }}
       >
         Let's build something.
       </motion.h2>
 
-      {/* CV preview — clickable image, downloads PDF */}
+      {/* CV — real page-one thumbnail beside the credentials it contains */}
       <motion.div
         variants={item}
         style={{
           display: 'flex',
-          flexDirection: 'column',
+          flexWrap: 'wrap',
           alignItems: 'center',
-          gap: '1.25rem',
+          justifyContent: 'center',
+          gap: 'clamp(2rem,5vw,4.5rem)',
         }}
       >
+        {/* Left — the actual document, clickable */}
         <a
           href="/ronen-cv.pdf"
           download
-          aria-label="Download CV"
-          style={{
-            display: 'inline-flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1.25rem',
-            textDecoration: 'none',
-            cursor: 'pointer',
-          }}
+          aria-label="Download CV as PDF"
+          style={{ display: 'block', flexShrink: 0, textDecoration: 'none' }}
         >
           <motion.img
             src="/cv-preview.png"
-            alt="Ronen Yakobov CV"
-            whileHover={reduce ? undefined : { y: -6, scale: 1.015 }}
+            alt="First page of Ronen Yakobov's CV"
+            width={508}
+            height={656}
+            whileHover={reduce ? undefined : { y: -6, rotate: -2, scale: 1.015 }}
             transition={{ duration: 0.45, ease: EASE_BRAND }}
             style={{
               display: 'block',
-              width: 'clamp(200px, 26vw, 320px)',
+              width: 'clamp(180px, 22vw, 260px)',
               height: 'auto',
-              borderRadius: 6,
-              transform: 'rotate(-8deg)',
+              borderRadius: 4,
+              border: '1px solid var(--border)',
+              transform: 'rotate(-6deg)',
               boxShadow: '0 24px 50px hsl(217 50% 18% / 0.22), 0 8px 18px hsl(217 50% 18% / 0.12)',
             }}
           />
-          <span
+        </a>
+
+        {/* Right — what the document says */}
+        <div style={{ textAlign: 'left', flex: '0 1 24rem', minWidth: '15rem' }}>
+          <p
             style={{
+              fontFamily: "'Moderniz', sans-serif",
+              fontSize: 'clamp(1.1rem,2vw,1.5rem)',
+              fontWeight: 400,
+              letterSpacing: '-0.02em',
+              color: 'var(--text)',
+              margin: '0 0 0.5rem',
+            }}
+          >
+            Ronen Yakobov
+          </p>
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: '0.9rem',
+              lineHeight: 1.5,
+              color: 'var(--muted)',
+              margin: '0 0 1.75rem',
+            }}
+          >
+            CS graduate, GPA 88. SCE Academic College, 2022–2025.
+          </p>
+
+          <dl style={{ margin: '0 0 2rem', display: 'grid', gap: '0.7rem' }}>
+            {CV_FACTS.map(({ label, value }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '0.9rem' }}>
+                <dt
+                  style={{
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.65rem',
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: 'var(--navy)',
+                    flex: '0 0 6rem',
+                  }}
+                >
+                  {label}
+                </dt>
+                <dd
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: '0.92rem',
+                    color: 'var(--text)',
+                    margin: 0,
+                  }}
+                >
+                  {value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <a
+            href="/ronen-cv.pdf"
+            download
+            style={{
+              display: 'inline-block',
               fontFamily: 'IBM Plex Mono, monospace',
               fontSize: '0.72rem',
-              letterSpacing: '0.28em',
+              letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              color: 'var(--muted)',
+              color: 'var(--nav-text)',
+              background: 'var(--navy)',
+              textDecoration: 'none',
+              borderRadius: 100,
+              padding: '0.75rem 1.6rem',
             }}
           >
             Download CV ↓
-          </span>
-        </a>
+          </a>
+          <p
+            style={{
+              fontFamily: 'IBM Plex Mono, monospace',
+              fontSize: '0.65rem',
+              letterSpacing: '0.12em',
+              color: 'var(--muted)',
+              margin: '0.9rem 0 0',
+            }}
+          >
+            one page · pdf
+          </p>
+        </div>
       </motion.div>
     </motion.section>
   )
